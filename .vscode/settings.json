@@ -1,0 +1,7 @@
+{
+    "cfs.configureWorkspace": "Yes",
+    "cfs.activeContext": "IDS_Hardware",
+    "cfs.project.target": "MAX78000",
+    "cfs.project.board": "FTHR_RevA",
+    "cfs.project.name": "firmware"
+}

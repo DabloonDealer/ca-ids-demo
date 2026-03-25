@@ -1,0 +1,15 @@
+ai8xize.py --no-version-check --overwrite --test-dir c:\Users\Amiltha M\IDS_Hardware\model --prefix caids --checkpoint-file c:\Users\Amiltha M\IDS_Hardware\model\caids_q8.pth.tar --config-file c:\Users\Amiltha M\IDS_Hardware\ai8x-synthesis\networks\caids.yaml --device MAX78000 --api-filename cnn.c --weight-filename weights.h --sample-filename sampledata.h --sample-output-filename sampleoutput.h --sample-input c:\Users\Amiltha M\IDS_Hardware\ai8x-training\sample_caids.npy
+MAX78000
+
+caids
+SUMMARY OF OPS
+Hardware: 62,928 ops (62,160 macc; 768 comp; 0 add; 0 mul; 0 bitwise)
+  Layer 0: 4,560 ops (4,320 macc; 240 comp; 0 add; 0 mul; 0 bitwise)
+  Layer 1: 35,040 ops (34,560 macc; 480 comp; 0 add; 0 mul; 0 bitwise)
+  Layer 2: 23,088 ops (23,040 macc; 48 comp; 0 add; 0 mul; 0 bitwise)
+  Layer 3: 240 ops (240 macc; 0 comp; 0 add; 0 mul; 0 bitwise)
+
+RESOURCE USAGE
+Weight memory: 27,168 bytes out of 442,368 bytes total (6.1%)
+Bias memory:   125 bytes out of 2,048 bytes total (6.1%)
+

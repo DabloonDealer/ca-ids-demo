@@ -1,0 +1,32 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "shell",
+      "command": "C:\\analog\\cfs\\2.0.1\\make.exe -r -j 8 --output-sync=target --no-print-directory TARGET=${config:cfs.project.target} BOARD=${config:cfs.project.board} MAKE=C:\\analog\\cfs\\2.0.1\\make.exe PROJECT=${config:cfs.project.name}",
+      "options": {
+        "cwd": "c:\\Users\\Amiltha M\\IDS_Hardware\\firmware",
+        "env": {
+          "PYTHONHOME": "C:\\analog\\cfs\\2.0.1\\Tools\\python",
+          "PYTHONPATH": "",
+          "MAXIM_PATH": "C:\\analog\\cfs\\2.0.1\\SDK\\MAX",
+          "PYTHON_CMD": "none",
+          "PATH": "C:/analog/cfs/2.0.1/Utils/cfsutil/bin;C:/analog/cfs/2.0.1/Tools/cfsai/bin;C:/analog/cfs/2.0.1/Tools/cmake/bin;C:/analog/cfs/2.0.1/Tools/dtc/bin;C:/analog/cfs/2.0.1/Tools/git/cmd;C:/analog/cfs/2.0.1/Tools/git/bin;C:/analog/cfs/2.0.1/Tools/git/usr/bin;C:/analog/cfs/2.0.1/Tools/openocd/bin;C:/analog/cfs/2.0.1/Tools/python/.;C:/analog/cfs/2.0.1/Tools/python/bin;C:/analog/cfs/2.0.1/Tools/python/Scripts;C:/analog/cfs/2.0.1/Tools/gcc/arm-none-eabi/bin;C:/analog/cfs/2.0.1/Tools/gcc/riscv-none-elf/bin;C:/analog/cfs/2.0.1/Tools/zephyr-sdk/arm-zephyr-eabi/bin;;;C:/analog/cfs/2.0.1;c:\\Users\\Amiltha M\\.vscode\\extensions\\cl.eide-3.26.5\\res\\tools\\win32\\unify_builder;C:\\Users\\Amiltha M\\.eide\\bin\\builder\\utils;C:\\Users\\Amiltha M\\.eide\\bin\\scripts;c:\\Users\\Amiltha M\\.vscode\\extensions\\cl.eide-3.26.5\\res\\tools\\win32\\7z;c:\\Users\\Amiltha M\\.vscode\\extensions\\cl.eide-3.26.5\\res\\tools\\win32\\utils;C:\\Program Files\\Java\\jdk-23\\bin;.;C:\\Users\\Amiltha M\\.eide\\bin\\builder\\msys\\bin;C:\\Users\\Amiltha M\\AppData\\Local\\Programs\\Microsoft VS Code;C:\\Program Files (x86)\\VMware\\VMware Player\\bin\\;C:\\Program Files\\Common Files\\Oracle\\Java\\javapath;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\Java\\jdk-23\\bin;;C:\\Program Files\\Docker\\Docker\\resources\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\dotnet\\;C:\\Program Files\\nodejs\\;C:\\Users\\Amiltha M\\AppData\\Local\\Programs\\Python\\Python313\\Scripts\\;C:\\Users\\Amiltha M\\AppData\\Local\\Programs\\Python\\Python313\\;C:\\Users\\Amiltha M\\AppData\\Local\\Programs\\Python\\Python312\\Scripts\\;C:\\Users\\Amiltha M\\AppData\\Local\\Programs\\Python\\Python312\\;C:\\Users\\Amiltha M\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Users\\Amiltha M\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Program Files\\JetBrains\\PyCharm Community Edition 2023.2.1\\bin;;C:\\Users\\Amiltha M\\AppData\\Roaming\\npm",
+          "CMAKE_PREFIX_PATH": "C:\\analog\\cfs\\2.0.1\\Tools\\zephyr-sdk",
+          "ZEPHYR_SDK_INSTALL_DIR": "C:/analog/cfs/2.0.1/Tools/zephyr-sdk",
+          "GIT_EXEC_PATH": "",
+          "CFSAI_PATH": "C:/analog/cfs/2.0.1/Tools/cfsai",
+          "ZEPHYR_BASE": "C:/analog/cfs/2.0.1/SDK/zephyr/zephyr"
+        },
+        "shell": {
+          "args": [
+            "/c"
+          ],
+          "executable": "${env:windir}\\System32\\cmd.exe"
+        }
+      },
+      "group": "build",
+      "label": "CFS: build"
+    }
+  ]
+}
