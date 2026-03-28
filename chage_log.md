@@ -1,4 +1,4 @@
-# IDS_Hardware Change Log
+﻿# IDS_Hardware Change Log
 
 Purpose: keep a running, chronological record of meaningful structural and code changes in this project, including the reason or diagnosis behind each change.
 
@@ -6,47 +6,48 @@ Important note:
 - This workspace is not a Git repository, so entries before 2026-03-23 are reconstructed from file timestamps and code inspection.
 - Reconstructed entries are marked as `Inferred`.
 - New work from this point onward should be appended here immediately after significant changes.
+- Security note: repo links are kept relative, and machine-specific absolute paths are replaced with placeholders such as `<repo-root>`, `<msdk-root>`, and `<cfs-root>`.
 
 ## Chronological Record
 
 ### 2026-03-16 22:11 `Inferred`
 Change:
-- Added [bridge/send_features.py](/c:/Users/Amiltha%20M/IDS_Hardware/bridge/send_features.py) as an early PC-side bridge component.
+- Added [bridge/send_features.py](bridge/send_features.py) as an early PC-side bridge component.
 
 Reason / diagnosis:
 - The project needed a host-side path to move feature windows toward embedded inference or UART transport.
 
 ### 2026-03-16 22:17 `Inferred`
 Change:
-- Added [firmware/main.c](/c:/Users/Amiltha%20M/IDS_Hardware/firmware/main.c).
+- Added [firmware/main.c](firmware/main.c).
 
 Reason / diagnosis:
 - Introduced the firmware application entry point so the IDS pipeline could exist on the embedded target, even though the file is currently empty and likely served as a placeholder/start point.
 
 ### 2026-03-16 22:18 `Inferred`
 Change:
-- Added [bridge/pc_bridge.py](/c:/Users/Amiltha%20M/IDS_Hardware/bridge/pc_bridge.py).
+- Added [bridge/pc_bridge.py](bridge/pc_bridge.py).
 
 Reason / diagnosis:
 - Expanded the host-side bridge tooling, likely to separate transport orchestration from raw feature sending.
 
 ### 2026-03-17 11:49 `Inferred`
 Change:
-- Added [tests/test_contract_parity.py](/c:/Users/Amiltha%20M/IDS_Hardware/tests/test_contract_parity.py).
+- Added [tests/test_contract_parity.py](tests/test_contract_parity.py).
 
 Reason / diagnosis:
 - The project needed a parity guard around the feature contract so training-side and bridge-side preprocessing stayed aligned.
 
 ### 2026-03-17 11:50 `Inferred`
 Change:
-- Added [training/requirements.txt](/c:/Users/Amiltha%20M/IDS_Hardware/training/requirements.txt).
+- Added [training/requirements.txt](training/requirements.txt).
 
 Reason / diagnosis:
 - Training dependencies were formalized so the model and evaluation workflow could be reproduced.
 
 ### 2026-03-17 11:51 `Inferred`
 Change:
-- Added [bridge/pipeline.py](/c:/Users/Amiltha%20M/IDS_Hardware/bridge/pipeline.py).
+- Added [bridge/pipeline.py](bridge/pipeline.py).
 - Centralized sliding-window buffering, normalization, tensor conversion, and UART packet generation behind `FeaturePipeline`.
 
 Reason / diagnosis:
@@ -54,15 +55,15 @@ Reason / diagnosis:
 
 ### 2026-03-17 12:04 `Inferred`
 Change:
-- Added [bridge/loopback.py](/c:/Users/Amiltha%20M/IDS_Hardware/bridge/loopback.py).
+- Added [bridge/loopback.py](bridge/loopback.py).
 
 Reason / diagnosis:
 - A loopback harness was needed to validate the host pipeline and quantized model without depending on real hardware during bring-up.
 
 ### 2026-03-23 09:56 `Inferred`
 Change:
-- Added or substantially updated [training/model.py](/c:/Users/Amiltha%20M/IDS_Hardware/training/model.py).
-- Added or substantially updated [training/training_utils.py](/c:/Users/Amiltha%20M/IDS_Hardware/training/training_utils.py).
+- Added or substantially updated [training/model.py](training/model.py).
+- Added or substantially updated [training/training_utils.py](training/training_utils.py).
 - Introduced the `CAIDS_CNN` quantization-aware 1D CNN with two Conv1d blocks, flatten, hidden linear layer, dropout, and classifier head.
 
 Reason / diagnosis:
@@ -70,7 +71,7 @@ Reason / diagnosis:
 
 ### 2026-03-23 10:03 `Inferred`
 Change:
-- Added [shared/feature_contract.py](/c:/Users/Amiltha%20M/IDS_Hardware/shared/feature_contract.py).
+- Added [shared/feature_contract.py](shared/feature_contract.py).
 - Centralized `FEATURE_ORDER`, input dimensions, normalization statistics, clipping, class names, and UART packet framing.
 
 Reason / diagnosis:
@@ -78,7 +79,7 @@ Reason / diagnosis:
 
 ### 2026-03-23 10:04 `Inferred`
 Change:
-- Added or substantially updated [training/train.py](/c:/Users/Amiltha%20M/IDS_Hardware/training/train.py).
+- Added or substantially updated [training/train.py](training/train.py).
 - Defined the QAT training loop, class reweighting, validation tracking, scheduler behavior, and TorchScript export of the quantized model.
 
 Reason / diagnosis:
@@ -86,64 +87,64 @@ Reason / diagnosis:
 
 ### 2026-03-23 10:30 `Inferred`
 Change:
-- Added or substantially updated [training/dataset.py](/c:/Users/Amiltha%20M/IDS_Hardware/training/dataset.py).
-- Added or substantially updated [training/simulator.py](/c:/Users/Amiltha%20M/IDS_Hardware/training/simulator.py).
+- Added or substantially updated [training/dataset.py](training/dataset.py).
+- Added or substantially updated [training/simulator.py](training/simulator.py).
 
 Reason / diagnosis:
 - The training stack needed synthetic CAN traffic generation and labeled scenarios to train and exercise the IDS before full hardware integration.
 
 ### 2026-03-23 10:32 `Inferred`
 Change:
-- Produced [training/caids_q8.pth](/c:/Users/Amiltha%20M/IDS_Hardware/training/caids_q8.pth).
+- Produced [training/caids_q8.pth](training/caids_q8.pth).
 
 Reason / diagnosis:
 - Quantized model export was required to verify the training pipeline and to provide a deployable artifact for simulation and downstream conversion.
 
 ### 2026-03-23 10:40 `Inferred`
 Change:
-- Added or substantially updated [training/evaluate.py](/c:/Users/Amiltha%20M/IDS_Hardware/training/evaluate.py).
-- Produced [training/confusion_matrix.png](/c:/Users/Amiltha%20M/IDS_Hardware/training/confusion_matrix.png).
+- Added or substantially updated [training/evaluate.py](training/evaluate.py).
+- Produced [training/confusion_matrix.png](training/confusion_matrix.png).
 
 Reason / diagnosis:
 - The project needed post-training evaluation and class-level error visibility to diagnose residual confusion between traffic classes.
 
 ### 2026-03-23 11:55 `Inferred`
 Change:
-- Added [NOTES_ai8x_constraints.md](/c:/Users/Amiltha%20M/IDS_Hardware/NOTES_ai8x_constraints.md).
+- Added [NOTES_ai8x_constraints.md](NOTES_ai8x_constraints.md).
 
 Reason / diagnosis:
 - The team needed a read-only compatibility check before porting the current CNN into the ai8x/MAX78000 toolchain.
 
 ### 2026-03-23 17:08 `Inferred`
 Change:
-- Produced [model/caids_q8.pth.tar](/c:/Users/Amiltha%20M/IDS_Hardware/model/caids_q8.pth.tar).
+- Produced [model/caids_q8.pth.tar](model/caids_q8.pth.tar).
 
 Reason / diagnosis:
 - The ai8x synthesis flow required a checkpoint-format artifact suitable for conversion into MAX78000 deployment code.
 
 ### 2026-03-23 17:20 `Inferred`
 Change:
-- Added generated deployment artifacts under [model/caids](/c:/Users/Amiltha%20M/IDS_Hardware/model/caids), including generated `cnn.c`, `cnn.h`, `weights.h`, sample data/output headers, build files, and launch/debug settings.
-- Added generated top-level copies [model/cnn.c](/c:/Users/Amiltha%20M/IDS_Hardware/model/cnn.c) and [model/cnn.h](/c:/Users/Amiltha%20M/IDS_Hardware/model/cnn.h).
+- Added generated deployment artifacts under [model/caids](model/caids), including generated `cnn.c`, `cnn.h`, `weights.h`, sample data/output headers, build files, and launch/debug settings.
+- Added generated top-level copies [model/cnn.c](model/cnn.c) and [model/cnn.h](model/cnn.h).
 - Current generated network shape shows a 4-layer 1D CNN mapped to MAX78000 with outputs for 5 classes.
 
 Reason / diagnosis:
 - The project reached the hardware-deployment stage and needed generated accelerator code from ai8x synthesis.
-- This stage also surfaced a likely mismatch risk: [model/cnn.h](/c:/Users/Amiltha%20M/IDS_Hardware/model/cnn.h) declares `CNN_NUM_OUTPUTS 3`, while [model/cnn.c](/c:/Users/Amiltha%20M/IDS_Hardware/model/cnn.c) unloads 5 outputs and the shared contract defines 5 classes. That should be treated as a deployment-consistency issue until verified or regenerated.
+- This stage also surfaced a likely mismatch risk: [model/cnn.h](model/cnn.h) declares `CNN_NUM_OUTPUTS 3`, while [model/cnn.c](model/cnn.c) unloads 5 outputs and the shared contract defines 5 classes. That should be treated as a deployment-consistency issue until verified or regenerated.
 
 ### 2026-03-23 17:xx
 Change:
-- Added [chage_log.md](/c:/Users/Amiltha%20M/IDS_Hardware/chage_log.md), [command_log.md](/c:/Users/Amiltha%20M/IDS_Hardware/command_log.md), and [adr.md](/c:/Users/Amiltha%20M/IDS_Hardware/adr.md).
+- Added [chage_log.md](chage_log.md), [command_log.md](command_log.md), and [adr.md](adr.md).
 
 Reason / diagnosis:
 - Persistent project memory was missing. These records were introduced so structural changes, executed commands, and architectural decisions are documented in one place and can be extended in later work.
 
 ### 2026-03-23 `Inferred current-session`
 Change:
-- Implemented Phase C Task 1 foundation in [firmware/main.c](/c:/Users/Amiltha%20M/IDS_Hardware/firmware/main.c).
+- Implemented Phase C Task 1 foundation in [firmware/main.c](firmware/main.c).
 - Added a UART packet parser state machine for the shared 64-byte framing contract: `SOF(0xA5,0x5A)`, sequence byte, 60-byte payload, XOR CRC.
 - Added payload repacking from channel-first packet order into the ai8x HWC SRAM layout expected by the generated CAIDS network.
-- Integrated the generated CNN wrapper flow from [model/caids/main.c](/c:/Users/Amiltha%20M/IDS_Hardware/model/caids/main.c) so valid packets trigger `cnn_init`, `cnn_configure`, input load, `cnn_start`, `cnn_unload`, and result printing.
+- Integrated the generated CNN wrapper flow from [model/caids/main.c](model/caids/main.c) so valid packets trigger `cnn_init`, `cnn_configure`, input load, `cnn_start`, `cnn_unload`, and result printing.
 
 Reason / diagnosis:
 - Phase C needed the first real firmware-side ingestion path from bridge packets into accelerator inference.
@@ -152,25 +153,25 @@ Reason / diagnosis:
 
 ### 2026-03-24
 Change:
-- Fixed `CNN_NUM_OUTPUTS` from `3` to `5` in [model/caids/cnn.h](/c:/Users/Amiltha%20M/IDS_Hardware/model/caids/cnn.h) and [model/cnn.h](/c:/Users/Amiltha%20M/IDS_Hardware/model/cnn.h) to match the generated unload path and the shared 5-class contract.
-- Updated [firmware/main.c](/c:/Users/Amiltha%20M/IDS_Hardware/firmware/main.c) to rely on the generated `CNN_NUM_OUTPUTS` constant instead of a local workaround.
-- Staged generated deployment sources into [firmware/cnn.c](/c:/Users/Amiltha%20M/IDS_Hardware/firmware/cnn.c), [firmware/cnn.h](/c:/Users/Amiltha%20M/IDS_Hardware/firmware/cnn.h), [firmware/weights.h](/c:/Users/Amiltha%20M/IDS_Hardware/firmware/weights.h), [firmware/Makefile](/c:/Users/Amiltha%20M/IDS_Hardware/firmware/Makefile), and [firmware/project.mk](/c:/Users/Amiltha%20M/IDS_Hardware/firmware/project.mk).
+- Fixed `CNN_NUM_OUTPUTS` from `3` to `5` in [model/caids/cnn.h](model/caids/cnn.h) and [model/cnn.h](model/cnn.h) to match the generated unload path and the shared 5-class contract.
+- Updated [firmware/main.c](firmware/main.c) to rely on the generated `CNN_NUM_OUTPUTS` constant instead of a local workaround.
+- Staged generated deployment sources into [firmware/cnn.c](firmware/cnn.c), [firmware/cnn.h](firmware/cnn.h), [firmware/weights.h](firmware/weights.h), [firmware/Makefile](firmware/Makefile), and [firmware/project.mk](firmware/project.mk).
 
 Reason / diagnosis:
-- Build preparation confirmed that the generated header was stale after synthesis: [model/caids/cnn.c](/c:/Users/Amiltha%20M/IDS_Hardware/model/caids/cnn.c) documents a `(5, 1, 1)` output shape while the paired header still declared `3`.
+- Build preparation confirmed that the generated header was stale after synthesis: [model/caids/cnn.c](model/caids/cnn.c) documents a `(5, 1, 1)` output shape while the paired header still declared `3`.
 - The mismatch had to be fixed at the source before compilation so firmware, generated code, and the shared feature contract agree at compile time.
 - The next planned step, a local MSDK build, is currently blocked because `arm-none-eabi-gcc` and `make` are not available on `PATH` in this environment.
 
 ### 2026-03-24
 Change:
-- Validated that [firmware/Makefile](/c:/Users/Amiltha%20M/IDS_Hardware/firmware/Makefile) uses `AUTOSEARCH ?= 1` and `SRCS += $(wildcard $(addsuffix /*.c, $(VPATH)))`, so the staged [firmware/cnn.c](/c:/Users/Amiltha%20M/IDS_Hardware/firmware/cnn.c) will be compiled automatically from the project root.
-- Confirmed the Phase 2 SDK environment exists at `C:\\MaximSDK` and that `setenv.bat` is present.
+- Validated that [firmware/Makefile](firmware/Makefile) uses `AUTOSEARCH ?= 1` and `SRCS += $(wildcard $(addsuffix /*.c, $(VPATH)))`, so the staged [firmware/cnn.c](firmware/cnn.c) will be compiled automatically from the project root.
+- Confirmed the Phase 2 SDK environment exists at `<msdk-root>` and that `setenv.bat` is present.
 - Verified that the SDK environment exposes `make`, `arm-none-eabi-gcc`, and `openocd` once `setenv.bat` runs.
-- Attempted the firmware build from [firmware](/c:/Users/Amiltha%20M/IDS_Hardware/firmware).
+- Attempted the firmware build from [firmware](firmware).
 
 Reason / diagnosis:
 - The exact `&&`-chained Phase 2 command sequence does not progress on this machine because `setenv.bat` returns exit code `1`, even though it sets the expected environment variables.
-- The first real build failure is not a firmware compile error yet: `make` resolves to `C:\\MaximSDK\\Tools\\MSYS2\\usr\\bin\\make.exe`, which aborts immediately with `*** fatal error - couldn't create signal pipe, Win32 error 5`.
+- The first real build failure is not a firmware compile error yet: `make` resolves to `<msdk-root>\\Tools\\MSYS2\\usr\\bin\\make.exe`, which aborts immediately with `*** fatal error - couldn't create signal pipe, Win32 error 5`.
 - Because compilation never started, flashing and UART parser verification were not attempted in this session.
 
 ### 2026-03-24
@@ -190,3 +191,77 @@ After every significant change:
 2. State exactly what changed.
 3. Record the reason, bug, diagnosis, or constraint that motivated it.
 4. If chronology is uncertain, mark the entry as `Inferred`.
+
+### 2026-03-27
+Change:
+- Replaced [firmware/main.c](firmware/main.c) with the user-supplied UART/CNN firmware implementation.
+- Added packet framing constants, `receive_packet()`, UART startup prints, CNN bring-up calls, inference wait logic, result unload, argmax classification, and `SEQ`/`CLASS` serial output.
+- Preserved the placeholder note indicating the CNN input-loading call still needs to be replaced with the project-specific implementation.
+
+Reason / diagnosis:
+- The firmware entry point needed to match the provided reference implementation exactly so the embedded runtime follows the requested UART packet receive and CNN inference flow.
+- The logging step was also explicitly requested as a required part of future edits, so this change is recorded here immediately.
+
+### 2026-03-27
+Change:
+- Replaced [firmware/main.c](firmware/main.c) again with the user-supplied UART-write variant.
+- Removed `stdio.h` usage and replaced `printf`-based status/result output with direct `MXC_UART_Write` calls through `uart_print()` and `uart_print_uint8()`.
+- Added explicit `CRC_FAIL` reporting on packet checksum mismatch and reset `cnn_time` to `0` after each inference wait completes.
+
+Reason / diagnosis:
+- The firmware needed to stop depending on formatted stdio output and instead emit serial status directly through UART0 writes.
+- This keeps the code closer to bare-metal bring-up expectations and matches the requested serial-output behavior exactly.
+
+### 2026-03-27
+Change:
+- Replaced [firmware/main.c](firmware/main.c) with the explicit Phase C Task 1 UART parser state machine.
+- Implemented the required parser states `WAIT_SOF1 -> WAIT_SOF2 -> READ_SEQ -> READ_PAYLOAD -> READ_CRC -> VALIDATE`.
+- Changed Task 1 behavior to echo `PARSE_OK,<seq>\n` for valid packets and `CRC_FAIL,<seq>\n` for failed CRC validation.
+- Simplified `main()` to UART bring-up plus `run_parser()` so the firmware now targets the Task 1 parser pass check only.
+
+Reason / diagnosis:
+- The prior implementation had SOF detection and CRC checking, but it did not satisfy the plan's required state-machine structure or the exact Task 1 pass-check output.
+- Phase C Task 1 needs the board to act as a packet parser verifier before later CNN integration tasks are layered on top.
+
+### 2026-03-27
+Change:
+- Attempted the Phase C Task 1 build command against [firmware](firmware) using the CodeFusion Studio toolchain paths provided by the user.
+- Verified that `make.exe`, `openocd.exe`, and `putty.exe` are present on this machine and that PuTTY can be launched for `COM4`.
+- Confirmed that [firmware/build/firmware.elf](firmware/build/firmware.elf) does not exist yet, so the flash step is currently blocked.
+
+Reason / diagnosis:
+- The first build attempt failed because it was launched from the repo root instead of [firmware](firmware).
+- The corrected build attempt then failed inside the MSDK makefiles because the workspace path was being split at the space in the username, producing malformed make targets.
+- A `cmd.exe` retry from the short-path form changed the failure mode but still did not compile, reporting `Makefile:354: <cfs-root>/SDK/MAX: Permission denied` and stopping before any ELF was produced.
+
+### 2026-03-27
+Change:
+- Replaced [firmware/main.c](firmware/main.c) with the user-supplied UART-flush parser variant.
+- Added `uart_flush()` using `MXC_UART_GetActive(MXC_UART0) == E_BUSY` and now flush after each `MXC_UART_Write()` inside `uart_print()`.
+- Kept the explicit Task 1 parser state machine and `PARSE_OK,<seq>` / `CRC_FAIL,<seq>` serial responses unchanged apart from the transmit-flush behavior.
+
+Reason / diagnosis:
+- This rewrite is intended to address the reported UART TX buffering / flashing issue by waiting for the UART peripheral to finish transmitting each message before continuing.
+- It preserves the Task 1 parser pass-check behavior while making serial output more deterministic during board-side verification.
+
+### 2026-03-27
+Change:
+- Replaced [firmware/main.c](firmware/main.c) with the delay-based UART flush version.
+- Added `#include "mxc_delay.h"` and changed `uart_flush()` to `MXC_Delay(MXC_DELAY_MSEC(10))`.
+- Kept the Task 1 parser state machine and `PARSE_OK,<seq>` / `CRC_FAIL,<seq>` protocol unchanged while swapping the transmit-completion workaround.
+
+Reason / diagnosis:
+- The previous flush strategy using `MXC_UART_GetActive()` was replaced with a fixed post-write delay to better address the observed UART TX buffer / flashing issue on hardware.
+- This keeps the parser logic stable while using a simpler, timing-based transmit completion guard at `115200` baud.
+
+### 2026-03-27
+Change:
+- Updated [firmware/main.c](firmware/main.c) to use blocking byte-at-a-time UART transmit via `MXC_UART_WriteCharacter()` instead of `MXC_UART_Write()`.
+- Changed `uart_flush()` to wait on `MXC_UART_ReadyForSleep(MXC_UART0)` so the UART fully drains before returning.
+- Added a `500 ms` startup delay before the boot banner so the USB-UART bridge / PuTTY has time to attach after reset.
+
+Reason / diagnosis:
+- The garbled startup text pattern (`CA-IDS fiTask 1: u`) is more consistent with partial/interleaved early boot transmission than with parser logic failure.
+- Local MAX/SDK examples use blocking per-byte console writes and FIFO/sleep readiness checks, which is a better fit for reliable short control messages on MAX78000 than the previous buffered-write helpers.
+- Opening PuTTY after OpenOCD resets the board can still miss the beginning of the banner, so the startup delay is intended to reduce that race as well.
+

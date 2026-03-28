@@ -1,37 +1,133 @@
 #include <stddef.h>
 #include <stdint.h>
+#include <string.h>
 #include "mxc.h"
+#include "mxc_delay.h"
 #include "cnn.h"
+
+typedef enum {
+    WAIT_SOF1,
+    WAIT_SOF2,
+    READ_SEQ,
+    READ_PAYLOAD,
+    READ_CRC,
+    VALIDATE
+} parser_state_t;
+
+#define PAYLOAD_LEN 60
+
+static uint8_t rx_seq;
+static uint8_t rx_payload[PAYLOAD_LEN];
+static uint8_t rx_crc;
+static uint8_t rx_payload_idx;
 
 volatile uint32_t cnn_time;
 
-// Define a buffer to hold the 6 incoming features
-int32_t sensor_data[6];
+static void uart_flush(void)
+{
+    while (MXC_UART_ReadyForSleep(MXC_UART0) != E_NO_ERROR) {}
+}
 
-void process_incoming_data(void) {
-    // Read 24 bytes (6 ints * 4 bytes) from UART
-    int rx_len = 24;
-    MXC_UART_Read(MXC_UART0, (uint8_t*)sensor_data, &rx_len);
-    
-    // Trigger LED to confirm receipt
-    LED_On(0); 
+static void uart_write_blocking(const uint8_t *buf, int len)
+{
+    for (int i = 0; i < len; i++) {
+        while (MXC_UART_WriteCharacter(MXC_UART0, buf[i]) == E_OVERFLOW) {}
+    }
+    uart_flush();
+}
+
+static void uart_print(const char *s)
+{
+    uart_write_blocking((const uint8_t *)s, (int)strlen(s));
+}
+
+static void uart_print_uint8(uint8_t val)
+{
+    char buf[4];
+    int i = 3;
+    buf[i] = '\0';
+    if (val == 0) {
+        buf[--i] = '0';
+    } else {
+        while (val > 0) {
+            buf[--i] = '0' + (val % 10);
+            val /= 10;
+        }
+    }
+    uart_print(&buf[i]);
+}
+
+static void run_parser(void)
+{
+    parser_state_t state = WAIT_SOF1;
+    uint8_t b;
+    int len;
+
+    while (1) {
+        len = 1;
+        MXC_UART_Read(MXC_UART0, &b, &len);
+
+        switch (state) {
+
+        case WAIT_SOF1:
+            if (b == 0xA5) state = WAIT_SOF2;
+            break;
+
+        case WAIT_SOF2:
+            if (b == 0x5A) state = READ_SEQ;
+            else state = WAIT_SOF1;
+            break;
+
+        case READ_SEQ:
+            rx_seq = b;
+            rx_payload_idx = 0;
+            state = READ_PAYLOAD;
+            break;
+
+        case READ_PAYLOAD:
+            rx_payload[rx_payload_idx++] = b;
+            if (rx_payload_idx == PAYLOAD_LEN)
+                state = READ_CRC;
+            break;
+
+        case READ_CRC:
+            rx_crc = b;
+            state = VALIDATE;
+
+        case VALIDATE: {
+            uint8_t crc = rx_seq;
+            for (int i = 0; i < PAYLOAD_LEN; i++)
+                crc ^= rx_payload[i];
+
+            if (crc == rx_crc) {
+                uart_print("PARSE_OK,");
+                uart_print_uint8(rx_seq);
+                uart_print("\n");
+            } else {
+                uart_print("CRC_FAIL,");
+                uart_print_uint8(rx_seq);
+                uart_print("\n");
+            }
+            state = WAIT_SOF1;
+            break;
+        }
+
+        default:
+            state = WAIT_SOF1;
+            break;
+        }
+    }
 }
 
 int main(void)
 {
-    /* Initialise UART0 at 115200 baud */
-    mxc_uart_regs_t *uart = MXC_UART0;
-    MXC_UART_Init(uart, 115200, MXC_UART_APB_CLK);
+    MXC_UART_Init(MXC_UART0, 115200, MXC_UART_APB_CLK);
 
-    /* Initialise CNN accelerator */
-    cnn_enable(MXC_S_GCR_PCLKDIV_CNNCLKSEL_PCLK,
-               MXC_S_GCR_PCLKDIV_CNNCLKDIV_DIV1);
-    cnn_init();
-    cnn_load_weights();
-    cnn_load_bias();
+    // Give the USB-UART bridge / terminal a moment to attach after reset.
+    MXC_Delay(MXC_DELAY_MSEC(500));
 
-    /* Main inference loop */
-    while (1) {
-        process_incoming_data();
-    }
+    uart_print("CA-IDS firmware ready\r\n");
+    uart_print("Task 1: UART parser active\r\n");
+    run_parser();
+    return 0;
 }

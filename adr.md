@@ -1,9 +1,10 @@
-# IDS_Hardware Architecture Decision Record
+﻿# IDS_Hardware Architecture Decision Record
 
 Purpose: capture the main architectural decisions already visible in this project, plus likely future decision points that should be resolved deliberately.
 
 Important note:
 - Because this workspace has no Git history, the "status" and "origin" of past decisions are inferred from current code and timestamps.
+- Security note: links are repo-relative so this document can be published without exposing local machine paths.
 
 ## Current Decisions
 
@@ -12,9 +13,9 @@ Status:
 - Accepted
 
 Evidence:
-- [shared/feature_contract.py](/c:/Users/Amiltha%20M/IDS_Hardware/shared/feature_contract.py)
-- [tests/test_contract_parity.py](/c:/Users/Amiltha%20M/IDS_Hardware/tests/test_contract_parity.py)
-- [bridge/pipeline.py](/c:/Users/Amiltha%20M/IDS_Hardware/bridge/pipeline.py)
+- [shared/feature_contract.py](shared/feature_contract.py)
+- [tests/test_contract_parity.py](tests/test_contract_parity.py)
+- [bridge/pipeline.py](bridge/pipeline.py)
 
 Decision:
 - Keep feature order, input shape, normalization statistics, class names, and UART framing in one shared module.
@@ -30,9 +31,9 @@ Status:
 - Accepted
 
 Evidence:
-- [training/model.py](/c:/Users/Amiltha%20M/IDS_Hardware/training/model.py)
-- [shared/feature_contract.py](/c:/Users/Amiltha%20M/IDS_Hardware/shared/feature_contract.py)
-- [model/cnn.c](/c:/Users/Amiltha%20M/IDS_Hardware/model/cnn.c)
+- [training/model.py](training/model.py)
+- [shared/feature_contract.py](shared/feature_contract.py)
+- [model/cnn.c](model/cnn.c)
 
 Decision:
 - Represent each inference window as 6 channels across 10 timesteps and classify it with a compact Conv1d-based network.
@@ -48,9 +49,9 @@ Status:
 - Accepted
 
 Evidence:
-- [training/model.py](/c:/Users/Amiltha%20M/IDS_Hardware/training/model.py)
-- [training/train.py](/c:/Users/Amiltha%20M/IDS_Hardware/training/train.py)
-- [training/caids_q8.pth](/c:/Users/Amiltha%20M/IDS_Hardware/training/caids_q8.pth)
+- [training/model.py](training/model.py)
+- [training/train.py](training/train.py)
+- [training/caids_q8.pth](training/caids_q8.pth)
 
 Decision:
 - Prepare the model for 8-bit deployment using QAT instead of relying on a purely post-training conversion path.
@@ -66,9 +67,9 @@ Status:
 - Accepted
 
 Evidence:
-- [bridge/pipeline.py](/c:/Users/Amiltha%20M/IDS_Hardware/bridge/pipeline.py)
-- [bridge/loopback.py](/c:/Users/Amiltha%20M/IDS_Hardware/bridge/loopback.py)
-- [training/simulator.py](/c:/Users/Amiltha%20M/IDS_Hardware/training/simulator.py)
+- [bridge/pipeline.py](bridge/pipeline.py)
+- [bridge/loopback.py](bridge/loopback.py)
+- [training/simulator.py](training/simulator.py)
 
 Decision:
 - Keep real-time buffering/packetization in `bridge/` and keep dataset generation and learning logic in `training/`.
@@ -84,9 +85,9 @@ Status:
 - Accepted
 
 Evidence:
-- [training/dataset.py](/c:/Users/Amiltha%20M/IDS_Hardware/training/dataset.py)
-- [training/simulator.py](/c:/Users/Amiltha%20M/IDS_Hardware/training/simulator.py)
-- [bridge/loopback.py](/c:/Users/Amiltha%20M/IDS_Hardware/bridge/loopback.py)
+- [training/dataset.py](training/dataset.py)
+- [training/simulator.py](training/simulator.py)
+- [bridge/loopback.py](bridge/loopback.py)
 
 Decision:
 - Train and validate the IDS using generated vehicle/CAN behavior before full hardware capture or live-stream integration.
@@ -102,10 +103,10 @@ Status:
 - Accepted, with open consistency checks
 
 Evidence:
-- [NOTES_ai8x_constraints.md](/c:/Users/Amiltha%20M/IDS_Hardware/NOTES_ai8x_constraints.md)
-- [model/caids](/c:/Users/Amiltha%20M/IDS_Hardware/model/caids)
-- [model/cnn.c](/c:/Users/Amiltha%20M/IDS_Hardware/model/cnn.c)
-- [model/cnn.h](/c:/Users/Amiltha%20M/IDS_Hardware/model/cnn.h)
+- [NOTES_ai8x_constraints.md](NOTES_ai8x_constraints.md)
+- [model/caids](model/caids)
+- [model/cnn.c](model/cnn.c)
+- [model/cnn.h](model/cnn.h)
 
 Decision:
 - Port the current CAIDS Conv1d architecture into the ai8x/MAX78000 toolchain rather than redesigning the model from scratch.
@@ -120,9 +121,9 @@ Consequence:
 
 ### RISK-001: Generated output-count drift between deployment files and shared contract
 Observed:
-- [shared/feature_contract.py](/c:/Users/Amiltha%20M/IDS_Hardware/shared/feature_contract.py) defines 5 classes.
-- [model/cnn.c](/c:/Users/Amiltha%20M/IDS_Hardware/model/cnn.c) unloads 5 outputs.
-- [model/cnn.h](/c:/Users/Amiltha%20M/IDS_Hardware/model/cnn.h) originally declared `CNN_NUM_OUTPUTS 3`.
+- [shared/feature_contract.py](shared/feature_contract.py) defines 5 classes.
+- [model/cnn.c](model/cnn.c) unloads 5 outputs.
+- [model/cnn.h](model/cnn.h) originally declared `CNN_NUM_OUTPUTS 3`.
 - The local generated headers were corrected to `5` on 2026-03-24 to match the generated unload path.
 
 Impact:
@@ -133,7 +134,7 @@ Needed decision:
 
 ### RISK-002: Empty firmware and bridge entry files
 Observed:
-- [firmware/main.c](/c:/Users/Amiltha%20M/IDS_Hardware/firmware/main.c), [bridge/send_features.py](/c:/Users/Amiltha%20M/IDS_Hardware/bridge/send_features.py), and [bridge/pc_bridge.py](/c:/Users/Amiltha%20M/IDS_Hardware/bridge/pc_bridge.py) are currently empty.
+- [firmware/main.c](firmware/main.c), [bridge/send_features.py](bridge/send_features.py), and [bridge/pc_bridge.py](bridge/pc_bridge.py) are currently empty.
 
 Impact:
 - The end-to-end deployment path is not yet captured in executable project code at those boundaries.
@@ -178,3 +179,4 @@ When a meaningful architectural decision is made:
 2. Record status as `Proposed`, `Accepted`, `Superseded`, or `Rejected`.
 3. Name the decision, reason, and consequences.
 4. Link the code or notes that implement or justify it.
+
