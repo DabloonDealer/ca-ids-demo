@@ -291,3 +291,15 @@ Reason / diagnosis:
 - The generated CAIDS network does not consume a flat byte stream directly; it expects HWC-packed input words in two SRAM regions, so the Task 2 buffer had to be repacked before `cnn_start()`.
 - Reusing the generated `cnn.c` / `cnn.h` runtime interface and matching its documented memory layout is the safest path for hardware inference bring-up.
 
+### 2026-03-28
+Change:
+- Updated [firmware/main.c](firmware/main.c) for Phase C Task 4 result output formatting.
+- Added `CLASS_NAMES`, `uart_print_uint32()`, and `send_result()` so inference results are emitted as `OK,<score>` for Normal traffic and `ALERT,<class_name>,<score>` for attack classes.
+- Changed `run_inference()` to return the predicted label while filling the caller-provided output buffer used for score reporting.
+- Replaced [test_packet_sender.py](test_packet_sender.py) with the Task 4 host-side pass-check script that validates both a normal response and an alert response.
+
+Reason / diagnosis:
+- Phase C Task 4 requires the board to publish a host-consumable result line immediately after `cnn_unload()` rather than a debug-oriented class index.
+- The existing Task 3 CNN input path was kept intact because the generated CAIDS network still expects the shared channels-first payload to be repacked into ai8x HWC SRAM layout before inference.
+- The host-side attack test keeps the shared packet contract as the source of truth by writing the RPM spike into the feature-3 channels-first payload slice.
+

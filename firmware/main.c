@@ -31,6 +31,10 @@ static uint8_t rx_payload_idx;
 
 volatile uint32_t cnn_time;
 
+static const char *CLASS_NAMES[N_CLASSES] = {
+    "Normal", "DoS", "Spoofing", "Replay", "Fuzzing"
+};
+
 static void uart_flush(void)
 {
     while (MXC_UART_ReadyForSleep(MXC_UART0) != E_NO_ERROR) {}
@@ -94,6 +98,25 @@ static void uart_print_int32(int32_t val)
     uart_print(&buf[i]);
 }
 
+static void uart_print_uint32(uint32_t val)
+{
+    char buf[11];
+    int i = 10;
+
+    buf[i] = '\0';
+
+    if (val == 0) {
+        buf[--i] = '0';
+    } else {
+        while (val > 0) {
+            buf[--i] = '0' + (val % 10);
+            val /= 10;
+        }
+    }
+
+    uart_print(&buf[i]);
+}
+
 static void load_window(void)
 {
     for (int t = 0; t < N_TIMESTEPS; t++) {
@@ -121,9 +144,8 @@ static void load_cnn_input(void)
     }
 }
 
-static int run_inference(void)
+static int run_inference(uint32_t *out)
 {
-    uint32_t out[N_CLASSES];
     int label = 0;
 
     cnn_start();
@@ -142,6 +164,23 @@ static int run_inference(void)
     }
 
     return label;
+}
+
+static void send_result(int label, const uint32_t *out)
+{
+    uint32_t score = out[label];
+
+    if (label == 0) {
+        uart_print("OK,");
+        uart_print_uint32(score);
+        uart_print("\n");
+    } else {
+        uart_print("ALERT,");
+        uart_print(CLASS_NAMES[label]);
+        uart_print(",");
+        uart_print_uint32(score);
+        uart_print("\n");
+    }
 }
 
 static void run_parser(void)
@@ -195,12 +234,11 @@ static void run_parser(void)
 
                 load_window();
                 load_cnn_input();
-
-                uart_print("PARSE_OK,");
-                uart_print_uint8(rx_seq);
-                uart_print(" CLASS=");
-                uart_print_int32(run_inference());
-                uart_print("\n");
+                {
+                    uint32_t out[N_CLASSES];
+                    int label = run_inference(out);
+                    send_result(label, out);
+                }
             } else {
                 uart_print("CRC_FAIL,");
                 uart_print_uint8(rx_seq);
@@ -231,7 +269,7 @@ int main(void)
     cnn_load_bias();
     cnn_configure();
 
-    uart_print("Task 3: CNN loaded. Waiting for packets...\r\n");
+    uart_print("Task 4: Result output active\r\n");
     run_parser();
     return 0;
 }
