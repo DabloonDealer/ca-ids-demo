@@ -703,3 +703,90 @@ For each new command:
 - Why it was run here: to record the commands used for the Task 2 implementation and logging step.
 - Result: succeeded.
 
+### 2026-03-28 Session
+
+`Get-Content -Path firmware/main.c`
+- Meaning: print the current firmware implementation.
+- Why it was run here: to inspect the Task 2 starting point before integrating the CNN runtime for Task 3.
+- Result: succeeded.
+
+`Get-ChildItem -Path firmware`
+- Meaning: list the firmware project contents.
+- Why it was run here: to confirm that the generated `cnn.c`, `cnn.h`, and related build files are already present in the firmware directory.
+- Result: succeeded.
+
+`Get-Content -Path firmware/cnn.h -TotalCount 220`
+- Meaning: print the top of the generated CNN header.
+- Why it was run here: to verify the available CNN API calls and the generated output-count constant before wiring Task 3.
+- Result: succeeded.
+
+`Get-Content -Path firmware/cnn.c -TotalCount 260`
+- Meaning: print the beginning of the generated CNN implementation.
+- Why it was run here: to inspect the generated accelerator runtime and infer how input/output handling should be integrated.
+- Result: succeeded.
+
+`Select-String -Path firmware/cnn.c -Pattern "load_input|sampledata|0x50400000|0x50408000|input" -Context 0,6`
+- Meaning: search the generated CNN implementation for input-loading clues and SRAM base addresses.
+- Why it was run here: to verify the actual accelerator input layout before copying Task 3 logic into firmware.
+- Result: succeeded.
+
+`Get-Content -Path model/caids/main.c -TotalCount 260`
+- Meaning: print the generated example application for the CAIDS network.
+- Why it was run here: to reuse the known-good CNN bring-up sequence and sample input-loading pattern for Task 3 integration.
+- Result: succeeded.
+
+`Get-Content -Path model/caids/sampledata.h -TotalCount 220`
+- Meaning: print the generated sample input header.
+- Why it was run here: to confirm how 6-channel, 10-timestep input data is packed into words for the accelerator SRAM.
+- Result: succeeded.
+
+`rg -n "50400000|50408000|HWC|channels-first|repacking|load_input|window" NOTES_ai8x_constraints.md chage_log.md adr.md command_log.md firmware model shared -S`
+- Meaning: search the local project notes and code for previously documented input-layout decisions.
+- Why it was run here: to recover the earlier payload-to-SRAM repacking decision and align Task 3 with the shared contract.
+- Result: succeeded.
+
+`Get-Content -Path shared/feature_contract.py -TotalCount 240`
+- Meaning: print the shared feature contract module.
+- Why it was run here: to verify the payload order produced by the bridge and ensure the firmware decodes it consistently during CNN integration.
+- Result: succeeded.
+
+`apply_patch` update of `firmware/main.c`
+- Meaning: modify the existing firmware parser implementation in place.
+- Why it was run here: to add CNN initialization, window-to-SRAM repacking, inference execution, and class-index reporting for Task 3.
+- Result: succeeded.
+
+`apply_patch` update of `test_packet_sender.py`
+- Meaning: modify the packet-sender verification script in place.
+- Why it was run here: to replace the Task 2 first-feature check with the Task 3 class-index pass check.
+- Result: succeeded.
+
+`Get-Content -Path firmware/main.c`
+- Meaning: print the updated firmware implementation.
+- Why it was run here: to verify that the Task 3 CNN integration and input-packing changes were written correctly.
+- Result: succeeded.
+
+`Get-Content -Path test_packet_sender.py`
+- Meaning: print the updated packet-sender script.
+- Why it was run here: to verify that the Task 3 pass-check script was written correctly.
+- Result: succeeded.
+
+`Get-Content -Path chage_log.md -Tail 60`
+- Meaning: print the tail of the change log.
+- Why it was run here: to inspect the latest log context before appending the Task 3 entry.
+- Result: succeeded.
+
+`Get-Content -Path command_log.md -Tail 80`
+- Meaning: print the tail of the command log.
+- Why it was run here: to inspect the latest command-log context before appending the Task 3 session history.
+- Result: succeeded.
+
+`apply_patch` update of `chage_log.md`
+- Meaning: append a dated change-log entry.
+- Why it was run here: to record the Task 3 CNN integration work and its rationale.
+- Result: succeeded.
+
+`apply_patch` update of `command_log.md`
+- Meaning: append a dated command-log section.
+- Why it was run here: to record the commands used for the Task 3 implementation and logging step.
+- Result: succeeded.
+

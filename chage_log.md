@@ -278,3 +278,16 @@ Reason / diagnosis:
 - A deterministic pass check was needed to prove that payload bytes are being copied into the window with the expected indexing and signed interpretation.
 - Using a known first-feature value of `42` gives a simple board-side verification that the parser, packet storage, and window loading all succeeded end-to-end.
 
+### 2026-03-28
+Change:
+- Updated [firmware/main.c](firmware/main.c) for Phase C Task 3 CNN integration.
+- Added CNN bring-up in `main()` with `cnn_enable()`, `cnn_init()`, `cnn_load_weights()`, `cnn_load_bias()`, and `cnn_configure()` before entering the parser loop.
+- Added `load_cnn_input()` to repack the buffered `(10 x 6)` window into the ai8x-generated HWC SRAM layout across `0x50400000` and `0x50408000`.
+- Added `run_inference()` to start the accelerator, wait for `cnn_time`, unload outputs, and return the argmax class index.
+- Changed the valid-packet response to `PARSE_OK,<seq> CLASS=<idx>` and replaced [test_packet_sender.py](test_packet_sender.py) with the Task 3 class-index pass-check script.
+
+Reason / diagnosis:
+- Phase C Task 3 requires a valid buffered window to flow all the way into the generated MAX78000 CNN runtime and produce a class index without crashing.
+- The generated CAIDS network does not consume a flat byte stream directly; it expects HWC-packed input words in two SRAM regions, so the Task 2 buffer had to be repacked before `cnn_start()`.
+- Reusing the generated `cnn.c` / `cnn.h` runtime interface and matching its documented memory layout is the safest path for hardware inference bring-up.
+
