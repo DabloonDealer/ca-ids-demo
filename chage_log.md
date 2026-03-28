@@ -265,3 +265,16 @@ Reason / diagnosis:
 - Local MAX/SDK examples use blocking per-byte console writes and FIFO/sleep readiness checks, which is a better fit for reliable short control messages on MAX78000 than the previous buffered-write helpers.
 - Opening PuTTY after OpenOCD resets the board can still miss the beginning of the banner, so the startup delay is intended to reduce that race as well.
 
+### 2026-03-28
+Change:
+- Updated [firmware/main.c](firmware/main.c) for Phase C Task 2 ring-buffer handling.
+- Added `rx_buf[64]` to retain one full validated packet and `window[10][6]` to hold the parsed feature window.
+- Added `uart_print_int8()` and `load_window()` so validated payload bytes are copied into the `(10 x 6)` feature window and the first decoded feature can be reported.
+- Changed the valid-packet response to `PARSE_OK,<seq> W[0][0]=<value>` and updated the boot banner to `Task 2: Ring buffer active`.
+- Replaced [test_packet_sender.py](test_packet_sender.py) with the Task 2 pass-check script that sends a packet where `window[0][0] = 42`.
+
+Reason / diagnosis:
+- The Phase C plan requires the firmware to keep one packet buffer plus a decoded `10 x 6` signed feature window before later CNN input integration.
+- A deterministic pass check was needed to prove that payload bytes are being copied into the window with the expected indexing and signed interpretation.
+- Using a known first-feature value of `42` gives a simple board-side verification that the parser, packet storage, and window loading all succeeded end-to-end.
+

@@ -621,3 +621,85 @@ For each new command:
 - Why it was run here: to preserve the firmware working directory while testing the remaining elevated-shell launch pattern.
 - Result: `setenv.bat` used the current firmware directory as `MAXIM_PATH`, so the toolchain path was wrong and `make` was not recognized.
 
+### 2026-03-28 Session
+
+`Get-Content -Path firmware/main.c`
+- Meaning: print the current firmware parser implementation.
+- Why it was run here: to inspect the exact starting point before applying the requested Task 2 ring-buffer updates.
+- Result: succeeded.
+
+`Get-ChildItem -Path .`
+- Meaning: list the top-level workspace contents.
+- Why it was run here: to confirm the nearby project files before editing and logging the Task 2 work.
+- Result: succeeded.
+
+`Get-Content -Path test_packet_sender.py`
+- Meaning: print the current packet-sender verification script.
+- Why it was run here: to check whether the old Task 1 sender needed to be replaced for the Task 2 pass check.
+- Result: succeeded.
+
+`git status --short`
+- Meaning: check for tracked and untracked changes in the repository.
+- Why it was run here: to see the current workspace state before editing.
+- Result: failed because Git reported a dubious ownership / safe-directory restriction for this workspace.
+
+`Get-Content -Raw -Path firmware/main.c`
+- Meaning: print the firmware file as one raw string.
+- Why it was run here: to capture exact patch context before editing the Task 2 implementation.
+- Result: succeeded.
+
+`Get-Content -Raw -Path test_packet_sender.py`
+- Meaning: print the sender script as one raw string.
+- Why it was run here: to capture exact patch context before replacing the old Task 1 test logic.
+- Result: succeeded.
+
+`apply_patch` update of `firmware/main.c`
+- Meaning: modify the existing firmware parser implementation in place.
+- Why it was run here: to add the Task 2 packet buffer, feature window, payload-to-window copy path, and first-feature pass-check output.
+- Result: succeeded.
+
+`apply_patch` delete of `test_packet_sender.py`
+- Meaning: remove the old packet-sender verification script.
+- Why it was run here: to replace the Task 1 pass-check script cleanly after patch matching was disrupted by the old file contents.
+- Result: succeeded.
+
+`apply_patch` add of `test_packet_sender.py`
+- Meaning: create a new packet-sender verification script.
+- Why it was run here: to install the Task 2 pass-check that sends a known `window[0][0] = 42` value and checks the board response.
+- Result: succeeded.
+
+`Get-Content -Path firmware/main.c`
+- Meaning: print the updated firmware implementation.
+- Why it was run here: to verify that the Task 2 ring-buffer and window-loading changes were written correctly.
+- Result: succeeded.
+
+`Get-Content -Path test_packet_sender.py`
+- Meaning: print the updated packet-sender script.
+- Why it was run here: to verify that the Task 2 pass-check script was written correctly.
+- Result: succeeded.
+
+`Get-Content -Path chage_log.md`
+- Meaning: print the project change log.
+- Why it was run here: to inspect the existing log format before appending the Task 2 success entry.
+- Result: succeeded.
+
+`Get-Content -Path command_log.md`
+- Meaning: print the project command log.
+- Why it was run here: to inspect the existing command-log format before appending the Task 2 session history.
+- Result: succeeded.
+
+`Get-Content -Path adr.md`
+- Meaning: print the architecture decision record.
+- Why it was run here: to confirm whether Task 2 required an architectural record in addition to the standard logs.
+- Result: succeeded.
+
+`apply_patch` update of `chage_log.md`
+- Meaning: append a dated change-log entry.
+- Why it was run here: to record Task 2 as a successful firmware and test-script update.
+- Result: succeeded.
+
+`apply_patch` update of `command_log.md`
+- Meaning: append a dated command-log section.
+- Why it was run here: to record the commands used for the Task 2 implementation and logging step.
+- Result: succeeded.
+

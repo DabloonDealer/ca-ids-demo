@@ -14,7 +14,12 @@ typedef enum {
     VALIDATE
 } parser_state_t;
 
-#define PAYLOAD_LEN 60
+#define PAYLOAD_LEN  60
+#define N_TIMESTEPS  10
+#define N_FEATURES   6
+
+static uint8_t rx_buf[64];
+static int8_t window[N_TIMESTEPS][N_FEATURES];
 
 static uint8_t rx_seq;
 static uint8_t rx_payload[PAYLOAD_LEN];
@@ -55,6 +60,44 @@ static void uart_print_uint8(uint8_t val)
         }
     }
     uart_print(&buf[i]);
+}
+
+static void uart_print_int8(int8_t val)
+{
+    char buf[5];
+    int i = 4;
+    uint8_t neg = 0;
+
+    buf[i] = '\0';
+
+    if (val < 0) {
+        neg = 1;
+        val = -val;
+    }
+
+    if (val == 0) {
+        buf[--i] = '0';
+    } else {
+        while (val > 0) {
+            buf[--i] = '0' + (val % 10);
+            val /= 10;
+        }
+    }
+
+    if (neg) {
+        buf[--i] = '-';
+    }
+
+    uart_print(&buf[i]);
+}
+
+static void load_window(void)
+{
+    for (int t = 0; t < N_TIMESTEPS; t++) {
+        for (int f = 0; f < N_FEATURES; f++) {
+            window[t][f] = (int8_t)rx_payload[t * N_FEATURES + f];
+        }
+    }
 }
 
 static void run_parser(void)
@@ -100,8 +143,18 @@ static void run_parser(void)
                 crc ^= rx_payload[i];
 
             if (crc == rx_crc) {
+                rx_buf[0] = 0xA5;
+                rx_buf[1] = 0x5A;
+                rx_buf[2] = rx_seq;
+                memcpy(&rx_buf[3], rx_payload, PAYLOAD_LEN);
+                rx_buf[63] = rx_crc;
+
+                load_window();
+
                 uart_print("PARSE_OK,");
                 uart_print_uint8(rx_seq);
+                uart_print(" W[0][0]=");
+                uart_print_int8(window[0][0]);
                 uart_print("\n");
             } else {
                 uart_print("CRC_FAIL,");
@@ -127,7 +180,7 @@ int main(void)
     MXC_Delay(MXC_DELAY_MSEC(500));
 
     uart_print("CA-IDS firmware ready\r\n");
-    uart_print("Task 1: UART parser active\r\n");
+    uart_print("Task 2: Ring buffer active\r\n");
     run_parser();
     return 0;
 }
