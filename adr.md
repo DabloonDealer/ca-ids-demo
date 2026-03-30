@@ -132,15 +132,17 @@ Impact:
 Needed decision:
 - The next full ai8x regeneration should preserve `5` outputs end-to-end. If the header falls back to `3` again, the synthesis or copy flow needs investigation instead of another manual patch.
 
-### RISK-002: Empty firmware and bridge entry files
+### RISK-002: Host-side bridge entry points still have mixed maturity
 Observed:
-- [firmware/main.c](firmware/main.c), [bridge/send_features.py](bridge/send_features.py), and [bridge/pc_bridge.py](bridge/pc_bridge.py) are currently empty.
+- [firmware/main.c](firmware/main.c) is now an active UART-to-CNN inference entry point.
+- [bridge/loopback_hitl.py](bridge/loopback_hitl.py) exists for end-to-end board/desktop comparison.
+- [bridge/send_features.py](bridge/send_features.py) and [bridge/pc_bridge.py](bridge/pc_bridge.py) still look prototype-level and are not the primary documented path.
 
 Impact:
-- The end-to-end deployment path is not yet captured in executable project code at those boundaries.
+- The main deployment path exists, but contributors can still be confused about which host-side scripts are authoritative for board bring-up versus older experiments.
 
 Needed decision:
-- Decide whether these files are placeholders to be implemented, or whether the real source of truth has moved elsewhere and these should be removed to avoid confusion.
+- Decide whether `send_features.py` / `pc_bridge.py` should be promoted, rewritten, or retired so the repo has one clearly supported host-side transport path.
 
 ## Future ADRs To Add
 

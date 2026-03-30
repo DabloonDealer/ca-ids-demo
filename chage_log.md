@@ -334,3 +334,14 @@ Reason / diagnosis:
 - The generated ai8x sample data confirms the per-timestep packing scheme, so the firmware should state that layout explicitly to avoid future regressions.
 - Cleaning up the unused integer-print helper removes a build warning while keeping the Task 4/5 result-output behavior unchanged.
 
+### 2026-03-30
+Change:
+- Updated [README.md](README.md) to reflect the current firmware and host-test workflow.
+- Documented the active UART result protocol, added [bridge/loopback_hitl.py](bridge/loopback_hitl.py) and [test_packet_sender.py](test_packet_sender.py) to the top-level project guide, and added quick-run commands for both.
+- Updated [adr.md](adr.md) so the host/firmware maturity risk matches the current repo state instead of describing [firmware/main.c](firmware/main.c) as empty.
+- Refreshed [command_log.md](command_log.md) and this change log to capture the documentation-sync work.
+
+Reason / diagnosis:
+- The documentation had drifted behind the implementation: the README still described firmware integration at a high level, while the ADR still referenced an earlier empty-entry-point state that no longer exists.
+- The project now has a clearer board-validation path through the Task 4/5 firmware plus the packet sender and HITL loopback scripts, so the docs should direct contributors to those paths explicitly.
+

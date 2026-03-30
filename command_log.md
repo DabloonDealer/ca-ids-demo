@@ -968,3 +968,70 @@ For each new command:
 - Why it was run here: to record the commands used for the Task 5 input-layout patch and logging step.
 - Result: succeeded.
 
+### 2026-03-30 Session
+
+`git status --short`
+- Meaning: show the current tracked and untracked workspace changes.
+- Why it was run here: to see what had changed before updating the project docs and logs.
+- Result: succeeded and showed unrelated local changes alongside the documentation work.
+
+`Get-Content firmware\main.c | Select-Object -First 320`
+- Meaning: print the beginning of the firmware entry file.
+- Why it was run here: to capture the current embedded behavior before updating the README, ADR, and logs.
+- Result: succeeded.
+
+`Get-Content test_packet_sender.py | Select-Object -First 260`
+- Meaning: print the host-side packet sender script.
+- Why it was run here: to document the current board smoke-test path in the README and logs.
+- Result: succeeded.
+
+`Get-Content README.md | Select-Object -First 260`
+- Meaning: print the current root README.
+- Why it was run here: to see which project details were outdated before rewriting the docs.
+- Result: succeeded.
+
+`Get-Content chage_log.md | Select-Object -First 320`
+- Meaning: print the change log.
+- Why it was run here: to inspect the existing chronology and avoid duplicating prior entries.
+- Result: succeeded.
+
+`Get-Content command_log.md | Select-Object -First 320`
+- Meaning: print the command log.
+- Why it was run here: to inspect the existing logging format before appending this session.
+- Result: succeeded.
+
+`Get-Content adr.md | Select-Object -First 260`
+- Meaning: print the architecture decision record.
+- Why it was run here: to verify which architectural notes still matched the live code and which needed correction.
+- Result: succeeded.
+
+`Get-Content chage_log.md | Select-Object -Last 120`
+- Meaning: print the tail of the change log.
+- Why it was run here: to inspect the most recent entries before appending the documentation-sync update.
+- Result: succeeded.
+
+`Get-Content command_log.md | Select-Object -Last 140`
+- Meaning: print the tail of the command log.
+- Why it was run here: to inspect recent command history before appending this session.
+- Result: succeeded.
+
+`Get-ChildItem bridge -Name`
+- Meaning: list the bridge directory entries.
+- Why it was run here: to confirm the current host-side tool set before adding those scripts to the README.
+- Result: succeeded.
+
+`Get-Content bridge\loopback_hitl.py | Select-Object -First 260`
+- Meaning: print the hardware-in-the-loop loopback script.
+- Why it was run here: to document the current HITL workflow accurately in the README and logs.
+- Result: succeeded.
+
+`Get-Content shared\feature_contract.py | Select-Object -First 220`
+- Meaning: print the shared feature contract.
+- Why it was run here: to verify the active packet format and transport contract before updating the README wording.
+- Result: succeeded.
+
+`apply_patch` update of `README.md`, `adr.md`, `chage_log.md`, and `command_log.md`
+- Meaning: modify the project documentation files in place.
+- Why it was run here: to sync the README, architecture record, and logs with the current firmware inference path and host-side validation scripts.
+- Result: succeeded.
+

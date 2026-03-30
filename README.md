@@ -50,7 +50,9 @@ The model input contract is fixed at `6` features over `10` timesteps, arranged 
 - `training/evaluate.py`: evaluation script and confusion matrix export
 - `bridge/pipeline.py`: sliding-window buffering and packet generation
 - `bridge/loopback.py`: software-only inference sanity check
+- `bridge/loopback_hitl.py`: hardware-in-the-loop comparison between board and desktop predictions
 - `firmware/main.c`: embedded entry point for UART-fed inference
+- `test_packet_sender.py`: quick host-side packet/result check for the board
 
 ## Python workflow
 
@@ -78,6 +80,18 @@ Run the software loopback check:
 python bridge/loopback.py --model training/caids_q8.pth --samples 200
 ```
 
+Run the hardware-in-the-loop roundtrip check:
+
+```powershell
+python bridge/loopback_hitl.py --port COM4 --samples 100
+```
+
+Run the simple board packet/result smoke test:
+
+```powershell
+python test_packet_sender.py
+```
+
 Run the parity tests:
 
 ```powershell
@@ -93,6 +107,7 @@ Important notes:
 - `firmware/` contains generated CNN sources staged for the firmware build.
 - The project is built around UART input at `115200` baud.
 - The shared UART framing contract is defined in `shared/feature_contract.py`.
+- The current firmware validates the 64-byte packet, repacks the `(10 x 6)` window into the ai8x input layout, runs CNN inference, and returns either `OK,<score>` or `ALERT,<class>,<score>`.
 - Local project notes indicate that command-line builds on this machine were blocked by SDK shell/tooling issues, so CodeFusion Studio may be the easiest way to build/flash if the plain `make` flow is unstable.
 
 ## Model summary
@@ -112,7 +127,8 @@ This repository already includes:
 - A trained quantized model at `training/caids_q8.pth`
 - An evaluation output image at `training/confusion_matrix.png`
 - ai8x-generated CNN sources under `model/` and `firmware/`
-- Initial UART-based embedded inference wiring in `firmware/main.c`
+- UART packet parsing, CNN input repacking, and result-line output in `firmware/main.c`
+- Host-side board verification utilities in `test_packet_sender.py` and `bridge/loopback_hitl.py`
 
 Some bridge scripts are still prototype-level and may need cleanup before production use, but the shared contract and training path are in place.
 
