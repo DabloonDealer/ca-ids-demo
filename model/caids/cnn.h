@@ -35,7 +35,7 @@ typedef int16_t q15_t;
 */
 
 /* Number of outputs for this network */
-#define CNN_NUM_OUTPUTS 5
+#define CNN_NUM_OUTPUTS 3
 
 /* Port pin actions used to signal that processing is active */
 

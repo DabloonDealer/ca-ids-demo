@@ -303,3 +303,34 @@ Reason / diagnosis:
 - The existing Task 3 CNN input path was kept intact because the generated CAIDS network still expects the shared channels-first payload to be repacked into ai8x HWC SRAM layout before inference.
 - The host-side attack test keeps the shared packet contract as the source of truth by writing the RPM spike into the feature-3 channels-first payload slice.
 
+### 2026-03-28
+Change:
+- Added [bridge/loopback_hitl.py](bridge/loopback_hitl.py) for Phase C Task 5 hardware-in-the-loop roundtrip validation.
+- The new script opens a live serial port, sends normalized windows to the board using the shared packet contract, runs the same windows through the desktop TorchScript model, and compares predictions packet-by-packet.
+- Added handling for `OK,<score>`, `ALERT,<class>,<score>`, timeouts, CRC failures, per-class counts, and final agreement reporting against the `>= 95%` pass criterion.
+
+Reason / diagnosis:
+- Task 5 is a laptop-side integration step; the Task 4 firmware already provides the required on-board inference and result-line protocol.
+- The repo's trained artifact at [training/caids_q8.pth](training/caids_q8.pth) is a TorchScript-exported quantized model, so the HITL loopback should load it the same way as the existing desktop evaluation path.
+- Using the shared packet builder and simulator/injector pipeline keeps board and desktop inputs aligned so any disagreement reflects inference drift rather than transport-format mismatch.
+
+### 2026-03-28
+Change:
+- Fixed [shared/feature_contract.py](shared/feature_contract.py) packet serialization for signed int8 payloads.
+- Changed `build_packet()` to emit the normalized payload via the NumPy int8 byte buffer directly instead of converting negative values through `bytes(payload.tolist())`.
+
+Reason / diagnosis:
+- The new Task 5 HITL loopback exposed a Python-side serialization bug: normalized feature payloads commonly contain negative int8 values such as `-127`, and Python's `bytes([...])` rejects integers outside `0..255`.
+- The firmware expects raw two's-complement payload bytes on UART, so serializing the NumPy int8 buffer directly is the correct transport representation.
+
+### 2026-03-29
+Change:
+- Updated [firmware/main.c](firmware/main.c) to document and lock in the confirmed Task 5 CNN input layout from [model/caids/sampledata.h](model/caids/sampledata.h).
+- Kept the channels-first payload decode in `load_window()` and clarified `load_cnn_input()` so features `0..3` are packed into `0x50400000` and features `4..5` into `0x50408000` per timestep in little-endian order.
+- Removed the now-unused `uart_print_int32()` helper and updated the boot banner to `Task 5: Correct input layout active`.
+
+Reason / diagnosis:
+- HITL parity work narrowed the remaining investigation to exact accelerator input layout rather than UART framing or parser correctness.
+- The generated ai8x sample data confirms the per-timestep packing scheme, so the firmware should state that layout explicitly to avoid future regressions.
+- Cleaning up the unused integer-print helper removes a build warning while keeping the Task 4/5 result-output behavior unchanged.
+

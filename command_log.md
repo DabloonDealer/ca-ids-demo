@@ -842,3 +842,129 @@ For each new command:
 - Why it was run here: to record the commands used for the Task 4 implementation and logging step.
 - Result: succeeded.
 
+### 2026-03-28 Session
+
+`Get-ChildItem -Path bridge`
+- Meaning: list the contents of the bridge directory.
+- Why it was run here: to inspect the existing laptop-side tooling before adding the Task 5 hardware-in-the-loop loopback script.
+- Result: succeeded.
+
+`Get-Content -Path bridge/loopback.py`
+- Meaning: print the existing desktop-only loopback script.
+- Why it was run here: to reuse the current desktop model-loading pattern and command-line style where appropriate for Task 5.
+- Result: succeeded.
+
+`Get-Content -Path training/simulator.py`
+- Meaning: print the simulator and attack injector implementation.
+- Why it was run here: to verify the available window-generation APIs that the Task 5 roundtrip script should use.
+- Result: succeeded.
+
+`Get-Content -Path training/model.py`
+- Meaning: print the desktop model definition.
+- Why it was run here: to verify the model interface while designing the Task 5 comparison path.
+- Result: succeeded.
+
+`Get-ChildItem -Path training`
+- Meaning: list the training directory contents.
+- Why it was run here: to confirm that the expected desktop model artifact exists before writing the Task 5 loader.
+- Result: succeeded.
+
+`@' ... '@ | python -`
+- Meaning: run a short Python snippet to check whether `training/caids_q8.pth` exists and report its size.
+- Why it was run here: to verify the presence of the desktop model artifact that the HITL script will load.
+- Result: succeeded and confirmed the file exists.
+
+`Get-Content -Path chage_log.md -Tail 40`
+- Meaning: print the tail of the change log.
+- Why it was run here: to inspect the latest log context before appending the Task 5 entry.
+- Result: succeeded.
+
+`Get-Content -Path command_log.md -Tail 60`
+- Meaning: print the tail of the command log.
+- Why it was run here: to inspect the latest command-log context before appending the Task 5 session history.
+- Result: succeeded.
+
+`rg -n "caids_q8\\.pth|torch\\.jit\\.save|torch\\.save|script|trace|quant" training/train.py training/evaluate.py training -S`
+- Meaning: search the training code for how the quantized model artifact is exported and loaded.
+- Why it was run here: to make the Task 5 desktop loader match the repo's actual model format instead of assuming a different serialization path.
+- Result: succeeded.
+
+`Get-Content -Path training/train.py`
+- Meaning: print the training script.
+- Why it was run here: to confirm that `training/caids_q8.pth` is saved with `torch.jit.save(...)` and should therefore be loaded with `torch.jit.load(...)`.
+- Result: succeeded.
+
+`apply_patch` add of `bridge/loopback_hitl.py`
+- Meaning: create a new hardware-in-the-loop loopback script.
+- Why it was run here: to implement the Task 5 roundtrip comparison between board predictions and desktop model predictions on the same generated windows.
+- Result: succeeded.
+
+`apply_patch` update of `chage_log.md`
+- Meaning: append a dated change-log entry.
+- Why it was run here: to record the Task 5 laptop-side HITL script and its rationale.
+- Result: succeeded.
+
+`apply_patch` update of `command_log.md`
+- Meaning: append a dated command-log section.
+- Why it was run here: to record the commands used for the Task 5 implementation and logging step.
+- Result: succeeded.
+
+### 2026-03-28 Session
+
+`Get-Content -Path shared/feature_contract.py`
+- Meaning: print the shared feature contract module.
+- Why it was run here: to inspect the packet builder after the user reported a runtime failure inside `build_packet()`.
+- Result: succeeded.
+
+`@' ... '@ | python -`
+- Meaning: run a short Python snippet that normalizes a sample window and prints the resulting int8 payload values.
+- Why it was run here: to confirm that the payload contains negative signed bytes, which explains the `ValueError` from `bytes(payload.tolist())`.
+- Result: succeeded and showed negative int8 values such as `-127`.
+
+`apply_patch` update of `shared/feature_contract.py`
+- Meaning: modify the shared packet builder in place.
+- Why it was run here: to serialize signed int8 payloads as raw bytes instead of passing negative integers into Python's `bytes(...)` constructor.
+- Result: succeeded.
+
+`apply_patch` update of `chage_log.md`
+- Meaning: append a dated change-log entry.
+- Why it was run here: to record the signed-payload serialization fix uncovered during Task 5 diagnosis.
+- Result: succeeded.
+
+`apply_patch` update of `command_log.md`
+- Meaning: append a dated command-log section.
+- Why it was run here: to record the commands used for the Task 5 packet-serialization diagnosis and fix.
+- Result: succeeded.
+
+### 2026-03-29 Session
+
+`Get-Content -Path firmware/main.c`
+- Meaning: print the current firmware implementation.
+- Why it was run here: to compare the live firmware against the newly confirmed Task 5 sampledata-based input-layout interpretation before patching.
+- Result: succeeded.
+
+`Get-Content -Path chage_log.md -Tail 40`
+- Meaning: print the tail of the change log.
+- Why it was run here: to inspect the latest log context before appending the Task 5 input-layout fix entry.
+- Result: succeeded.
+
+`Get-Content -Path command_log.md -Tail 50`
+- Meaning: print the tail of the command log.
+- Why it was run here: to inspect the latest command-log context before appending this session's history.
+- Result: succeeded.
+
+`apply_patch` update of `firmware/main.c`
+- Meaning: modify the existing firmware implementation in place.
+- Why it was run here: to lock in the confirmed ai8x sampledata-based input-packing comments, keep the correct SRAM bank addresses, remove the unused signed integer print helper, and update the Task 5 boot banner.
+- Result: succeeded.
+
+`apply_patch` update of `chage_log.md`
+- Meaning: append a dated change-log entry.
+- Why it was run here: to record the Task 5 input-layout confirmation and firmware cleanup.
+- Result: succeeded.
+
+`apply_patch` update of `command_log.md`
+- Meaning: append a dated command-log section.
+- Why it was run here: to record the commands used for the Task 5 input-layout patch and logging step.
+- Result: succeeded.
+

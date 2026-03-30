@@ -42,4 +42,5 @@ def build_packet(seq: int, norm_window: np.ndarray) -> bytes:
     crc = seq & 0xFF
     for value in payload:
         crc ^= int(value) & 0xFF
-    return UART_SOF + struct.pack("B", seq & 0xFF) + bytes(payload.tolist()) + struct.pack("B", crc)
+    payload_bytes = payload.astype(np.int8, copy=False).tobytes()
+    return UART_SOF + struct.pack("B", seq & 0xFF) + payload_bytes + struct.pack("B", crc)
